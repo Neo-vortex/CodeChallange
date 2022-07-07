@@ -4,14 +4,27 @@
     <projectFile profileName="CodeChallange">CodeChallange/CodeChallange.csproj</projectFile>
     <projectFile profileName="IIS Express">CodeChallange/CodeChallange.csproj</projectFile>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="eaf05e25-7fa4-47b1-b560-5b31772cd63e" name="Changes" comment="first commit">
-      <change beforePath="$PROJECT_DIR$/../.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/build.yml" afterDir="false" />
+    <list default="true" id="eaf05e25-7fa4-47b1-b560-5b31772cd63e" name="Changes" comment="fix CI/CD script">
+      <change afterPath="$PROJECT_DIR$/UnitTest/UnitTest.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTest/UnitTest1.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTest/Usings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CodeChallange/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CodeChallange/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodeChallange.sln" beforeDir="false" afterPath="$PROJECT_DIR$/CodeChallange.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodeChallange/CodeChallange.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CodeChallange/CodeChallange.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodeChallange/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CodeChallange/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodeChallange/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/CodeChallange/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2BcDbNy9gvP2kXpZtxY2iSek2dk" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -72,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1657196550110</updated>
-      <workItem from="1657196553730" duration="316000" />
+      <workItem from="1657196553730" duration="1890000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1657196597986</created>
@@ -81,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657196597986</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix CI/CD script">
+      <created>1657196880759</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1657196880759</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -103,6 +123,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
+    <MESSAGE value="fix CI/CD script" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix CI/CD script" />
   </component>
 </project>
