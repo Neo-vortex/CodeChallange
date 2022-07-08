@@ -2,11 +2,13 @@ using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CodeChallenge.Models.Identity;
+using CodeChallenge.Models.Interfaces;
 using CodeChallenge.Services.AutofacModules;
 using CodeChallenge.Services.DataAccess;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -27,6 +29,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(_builder =>
 {
     _builder.RegisterModule<ValidatersModule>();
     _builder.RegisterModule<JWTModule>();
+    _builder.RegisterType<ApplicationDbContext>().As<IdentityDbContext<ApplicationUser>>();
 
 });
 var configuration = builder.Configuration;
@@ -48,6 +51,8 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateActor = true,
+            ValidateLifetime = true,
             ValidAudience = configuration["JWT:ValidAudience"],
             ValidIssuer = configuration["JWT:ValidIssuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))

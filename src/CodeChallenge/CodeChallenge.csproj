@@ -35,8 +35,6 @@
 
     <ItemGroup>
       <Folder Include="Controllers" />
-      <Folder Include="Services\DataAccess\Commands" />
-      <Folder Include="Services\User" />
     </ItemGroup>
 
 </Project>

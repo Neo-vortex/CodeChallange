@@ -1,22 +1,23 @@
 using CodeChallenge.Models.Identity;
+using CodeChallenge.Models.Interfaces;
 using CodeChallenge.Services.DataAccess.Queries.Base;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CodeChallenge.Services.DataAccess.Queries;
 
 public class CheckUserExistsHandler : IRequestHandler<CheckUserExists, bool>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly  IdentityDbContext<ApplicationUser> _databaseManager;
 
-    public CheckUserExistsHandler(UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+    public CheckUserExistsHandler( IdentityDbContext<ApplicationUser> databaseManager)
     {
-        _userManager = userManager;
+        _databaseManager = databaseManager;
     }
 
     public Task<bool> Handle(CheckUserExists request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_userManager.Users.Any(usr => usr.UserName == request.UserName));
+        return Task.Run(() => _databaseManager.Users.Any(user => user.UserName == request.UserName), cancellationToken);
     }
 }
