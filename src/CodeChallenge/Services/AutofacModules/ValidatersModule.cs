@@ -11,6 +11,7 @@ public class ValidatersModule  : Module
     {
         builder.RegisterType<RegisterValidator>().As<IValidator<Register>>();
         builder.RegisterType<LoginValidator>().As<IValidator<Login>>();
+        builder.RegisterType<MazeValidator>().As<IValidator<MazeDTO>>();
         base.Load(builder);
     }
 }

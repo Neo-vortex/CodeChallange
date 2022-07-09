@@ -2,13 +2,13 @@ using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CodeChallenge.Models.Identity;
-using CodeChallenge.Models.Interfaces;
 using CodeChallenge.Services.AutofacModules;
 using CodeChallenge.Services.DataAccess;
+using CodeChallenge.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -29,7 +29,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(_builder =>
 {
     _builder.RegisterModule<ValidatersModule>();
     _builder.RegisterModule<JWTModule>();
-    _builder.RegisterType<ApplicationDbContext>().As<IdentityDbContext<ApplicationUser>>();
+    _builder.RegisterModule<DatabaseModule>();
 
 });
 var configuration = builder.Configuration;
@@ -60,7 +60,10 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => 
+{
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
 {

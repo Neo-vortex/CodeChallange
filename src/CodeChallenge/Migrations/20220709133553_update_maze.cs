@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CodeChallenge.Migrations
 {
-    public partial class init : Migration
+    public partial class update_maze : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,30 @@ namespace CodeChallenge.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mazes",
+                columns: table => new
+                {
+                    _id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    IsSolved = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Height = table.Column<int>(type: "INTEGER", nullable: false),
+                    Width = table.Column<int>(type: "INTEGER", nullable: false),
+                    Walls = table.Column<string>(type: "TEXT", nullable: false),
+                    Start = table.Column<string>(type: "TEXT", nullable: false),
+                    End = table.Column<string>(type: "TEXT", nullable: false),
+                    StringRepresentation = table.Column<string>(type: "TEXT", nullable: false),
+                    ShortestPath = table.Column<string>(type: "TEXT", nullable: false),
+                    LongestPath = table.Column<string>(type: "TEXT", nullable: false),
+                    Hash = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstStageImage = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    SecondStageImage = table.Column<byte[]>(type: "BLOB", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mazes", x => x._id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,6 +178,35 @@ namespace CodeChallenge.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserMaze",
+                columns: table => new
+                {
+                    Mazes_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    UsersId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserMaze", x => new { x.Mazes_id, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserMaze_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserMaze_Mazes_Mazes_id",
+                        column: x => x.Mazes_id,
+                        principalTable: "Mazes",
+                        principalColumn: "_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserMaze_UsersId",
+                table: "ApplicationUserMaze",
+                column: "UsersId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -195,6 +248,9 @@ namespace CodeChallenge.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApplicationUserMaze");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -208,6 +264,9 @@ namespace CodeChallenge.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Mazes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

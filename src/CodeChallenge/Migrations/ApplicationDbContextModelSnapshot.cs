@@ -17,6 +17,21 @@ namespace CodeChallenge.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
 
+            modelBuilder.Entity("ApplicationUserMaze", b =>
+                {
+                    b.Property<int>("Mazes_id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Mazes_id", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ApplicationUserMaze");
+                });
+
             modelBuilder.Entity("CodeChallenge.Models.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -87,22 +102,54 @@ namespace CodeChallenge.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MazeDetails")
+                    b.Property<string>("End")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MazeIdentifier")
+                    b.Property<byte[]>("FirstStageImage")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsSolved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LongestPath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("SecondStageImage")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("ShortestPath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Start")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StringRepresentation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Walls")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("_id");
 
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Maze");
+                    b.ToTable("Mazes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -233,11 +280,19 @@ namespace CodeChallenge.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CodeChallenge.Models.Types.Maze", b =>
+            modelBuilder.Entity("ApplicationUserMaze", b =>
                 {
+                    b.HasOne("CodeChallenge.Models.Types.Maze", null)
+                        .WithMany()
+                        .HasForeignKey("Mazes_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CodeChallenge.Models.Identity.ApplicationUser", null)
-                        .WithMany("Mazes")
-                        .HasForeignKey("ApplicationUserId");
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -289,11 +344,6 @@ namespace CodeChallenge.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CodeChallenge.Models.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("Mazes");
                 });
 #pragma warning restore 612, 618
         }
