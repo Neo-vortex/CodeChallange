@@ -13,47 +13,13 @@ namespace CodeChallenge.Models.Types;
 public class Maze
 {
     public Maze(){}
-
-
-    private async void  GenerateFirstStageImage()
-    {
-        using Image<Rgba32> image = new(800, 800);
-        image.Mutate(ctx => ctx.Fill(Color.Gray));
-        foreach (var wall in Walls)
-        {
-            image.Mutate(ctx => ctx.Fill(Color.Black, new Rectangle(wall.X * 800/Width, wall.Y * 800/Height, 800/Width, 800/Width)));
-        }
-        image.Mutate(ctx => ctx.Fill(Color.DarkGreen, new Rectangle(Start.X * 800/Width, Start.Y * 800/this.Height, 800/Width, 800/Width)));
-        var memoryStream = new MemoryStream();
-        await image.SaveAsync (memoryStream,PngFormat.Instance);
-        FirstStageImage = memoryStream.ToArray();
-        await memoryStream.DisposeAsync();
-    }
-    
-    private MazePoint[] StringToMazePointArray(string s)
-    {
-        var parts = s.Split(",");
-        var result = new MazePoint[parts.Length];
-        for (var i = 0; i < parts.Length; i++)
-        {
-            result[i] = StringToMazePoint(parts[i].Replace(@"""", "").Trim());
-        }
-        return result;
-    }
-
-   private static MazePoint StringToMazePoint(string s)
-    {
-        return new MazePoint
-        {
-            X = s[0] - 65,
-            Y = int.Parse(s[1].ToString())  - 1
-        };
-    }
     
     [Key]
     public int _id { get; set; }
-    
-    public bool IsSolved { get; set; }
+    public  bool NoSolutionDefinitely { get; set; }
+    public  bool PrimitiveAnalysis { get; set; }
+    public bool MinSolved { get; set; }
+    public bool MaxSolved { get; set; }
     public int Height { get; set; }
     public  int Width { get; set; }
     public MazePoint[] Walls { get; set; }
@@ -62,8 +28,11 @@ public class Maze
     public  string StringRepresentation { get; set; }
     public MazePoint[]? ShortestPath { get; set; }
     public  MazePoint[]? LongestPath { get; set; }
+    
+    public  MazePointHeuristic[]? Heuristics { get; set; }
     public  string Hash { get; set; }
-    public byte[]? FirstStageImage { get; set; }
+    
+    public byte[]? Image { get; set; }
     public byte[]? SecondStageImage { get; set; }
     
     [JsonIgnore]
@@ -76,12 +45,12 @@ public class Maze
         {
             Height = size[0] - '0';
             Width = size[2] - '0' ;
-            Start = StringToMazePoint(entry);
+            Start = Utilities.Extentions.ToMazePoint(entry);
             var srt = System.Text.Json.JsonSerializer.Serialize(walls.ToList()).Replace("[", "").Replace("]", "");
-            Walls = StringToMazePointArray(srt );
-            Hash =  Utilities.UtilityFunctions.CalculateHash( string.Concat(new { walls = srt , entry ,size}) , true).ToString();
+            Walls = Utilities.Extentions.StringToMazePointArray(srt );
+            Hash = Utilities.UtilityFunctions.CalculateHash(string.Concat(new { walls = srt, entry, size }));
             StringRepresentation = textRepresentation;
-            GenerateFirstStageImage();
+            GenerateImage();
             ShortestPath = new []{new MazePoint(){X = -1, Y = -1}};
             LongestPath = new []{new MazePoint(){X = -1, Y = -1}};
             SecondStageImage = new byte[] { 0 };
@@ -98,11 +67,11 @@ public class Maze
         {
             Height = size[0] - '0';
             Width = size[2] - '0' ;
-            Start = StringToMazePoint(entry);
-            Walls = StringToMazePointArray(walls);
-            Hash =  Utilities.UtilityFunctions.CalculateHash( string.Concat(new {walls , entry ,size}) , true).ToString();
+            Start = Utilities.Extentions.ToMazePoint(entry);
+            Walls = Utilities.Extentions.StringToMazePointArray(walls);
+            Hash = Utilities.UtilityFunctions.CalculateHash(string.Concat(new { walls, entry, size }));
             StringRepresentation = textRepresentation;
-            GenerateFirstStageImage();
+            GenerateImage();
             ShortestPath = new []{new MazePoint(){X = -1, Y = -1}};
             LongestPath = new []{new MazePoint(){X = -1, Y = -1}};
             SecondStageImage = new byte[] { 0 };
@@ -112,5 +81,43 @@ public class Maze
             throw new Exception("Invalid maze input, " + e.Message );
         }
     }
+    public async void  GenerateImage()
+    {
+        using Image<Rgba32> image =  new(800, 800);
+        var options = new DrawingOptions
+        {
+            GraphicsOptions = new GraphicsOptions { BlendPercentage = .5F }
+        }; 
+        image.Mutate(ctx => ctx.Fill(Color.Gray));
+        foreach (var wall in Walls)
+        {
+            image.Mutate(ctx => ctx.Fill(options, Color.Black, new Rectangle(wall.X * 800/Width,  (wall.Y * 800/Height), 800/Width, 800/Height)));
+        }
+        image.Mutate(ctx => ctx.Fill(options , Color.DarkGreen, new Rectangle(Start.X * 800/Width, Start.Y * 800/this.Height, 800/Width, 800/Height)));
+        if (PrimitiveAnalysis && !NoSolutionDefinitely)
+        {
+            image.Mutate(ctx => ctx.Fill(options , Color.DarkRed, new Rectangle(End.X * 800/Width, End.Y * 800/this.Height, 800/Width, 800/Height)));
+        }
+        if (MinSolved)
+        {
+            foreach (var path in ShortestPath!)
+            {
+                image.Mutate(ctx => ctx.Fill(options , Color.LightBlue, new Rectangle(path.X * 800/Width,  (path.Y * 800/Height), 800/Width, 800/Height)));
+            }
+        }
+        if (MaxSolved)
+        {
+            foreach (var path in ShortestPath!)
+            {
+                image.Mutate(ctx => ctx.Fill(options ,Color.DarkBlue, new Rectangle(path.X * 800/Width,  (path.Y * 800/Height), 800/Width, 800/Height)));
+            }
+        }
+        var memoryStream = new MemoryStream();
+        await image.SaveAsync (memoryStream,PngFormat.Instance);
+        Image = memoryStream.ToArray();
+        await memoryStream.DisposeAsync();
+    }
+    
+    
 
 }

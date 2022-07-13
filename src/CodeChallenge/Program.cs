@@ -30,6 +30,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(_builder =>
     _builder.RegisterModule<ValidatersModule>();
     _builder.RegisterModule<JWTModule>();
     _builder.RegisterModule<DatabaseModule>();
+    _builder.RegisterModule<MazeModule>();
+    _builder.RegisterModule<ComputationModule>();
 
 });
 var configuration = builder.Configuration;
@@ -74,7 +76,7 @@ builder.Services.AddSwaggerGen(setup =>
         Name = "JWT Authentication",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
-        Description = "Put **_ONLY_** your JWT Bearer token on Textbox below!",
+        Description = "Put your JWT Bearer token below",
 
         Reference = new OpenApiReference
         {
@@ -92,11 +94,9 @@ builder.Services.AddSwaggerGen(setup =>
 
 });
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

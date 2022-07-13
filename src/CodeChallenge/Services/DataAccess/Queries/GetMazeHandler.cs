@@ -1,3 +1,4 @@
+using CodeChallenge.Models.Interfaces;
 using CodeChallenge.Models.Types;
 using CodeChallenge.Services.DataAccess.Queries.Base;
 using MediatR;
@@ -7,9 +8,9 @@ namespace CodeChallenge.Services.DataAccess.Queries;
 
 public class GetMazeHandler : IRequestHandler<GetMaze , Maze?>
 {
-    private readonly ApplicationDbContext _databaseManager;
+    private readonly IDatabaseManager _databaseManager;
 
-    public GetMazeHandler(ApplicationDbContext databaseManager)
+    public GetMazeHandler(IDatabaseManager databaseManager)
     {
         _databaseManager = databaseManager;
     }

@@ -3,6 +3,7 @@ using System;
 using CodeChallenge.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeChallenge.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220710071809_switch_to_sha256")]
+    partial class switch_to_sha256
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -106,18 +108,15 @@ namespace CodeChallenge.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<byte[]>("FirstStageImage")
+                        .HasColumnType("BLOB");
+
                     b.Property<string>("Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Height")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Heuristics")
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("BLOB");
 
                     b.Property<string>("LongestPath")
                         .HasColumnType("TEXT");
@@ -126,12 +125,6 @@ namespace CodeChallenge.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("MinSolved")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("NoSolutionDefinitely")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("PrimitiveAnalysis")
                         .HasColumnType("INTEGER");
 
                     b.Property<byte[]>("SecondStageImage")

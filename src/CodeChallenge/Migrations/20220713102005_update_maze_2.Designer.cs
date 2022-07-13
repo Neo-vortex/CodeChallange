@@ -3,6 +3,7 @@ using System;
 using CodeChallenge.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeChallenge.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220713102005_update_maze_2")]
+    partial class update_maze_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
@@ -106,6 +108,9 @@ namespace CodeChallenge.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<byte[]>("FirstStageImage")
+                        .HasColumnType("BLOB");
+
                     b.Property<string>("Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -115,9 +120,6 @@ namespace CodeChallenge.Migrations
 
                     b.Property<string>("Heuristics")
                         .HasColumnType("TEXT");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("BLOB");
 
                     b.Property<string>("LongestPath")
                         .HasColumnType("TEXT");

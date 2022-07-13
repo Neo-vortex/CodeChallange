@@ -1,19 +1,15 @@
+using System.Security.Cryptography;
+using System.Text;
+
 namespace CodeChallenge.Utilities;
 
 public static class UtilityFunctions
 {
-   public static ulong CalculateHash(string read, bool lowTolerance)
+    public static string CalculateHash(string read)
     {
-        ulong hashedValue = 0;
-        var i = 0;
-        ulong multiplier = 1;
-        while (i < read.Length)
-        {
-            hashedValue += read[i] * multiplier;
-            multiplier *= 37;
-            if (lowTolerance) i += 2;
-            else i++;
-        }
-        return hashedValue;
+        var crypt = SHA256.Create();
+        var hash = string.Empty;
+        var crypto = crypt.ComputeHash(Encoding.ASCII.GetBytes(read));
+        return crypto.Aggregate(hash, (current, theByte) => current + theByte.ToString("x2"));
     }
 }

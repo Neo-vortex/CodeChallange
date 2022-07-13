@@ -9,9 +9,9 @@ namespace CodeChallenge.Services.DataAccess.Queries;
 
 public class CheckUserExistsHandler : IRequestHandler<CheckUserExists, bool>
 {
-    private readonly  IdentityDbContext<ApplicationUser> _databaseManager;
+    private readonly  IDatabaseManager _databaseManager;
 
-    public CheckUserExistsHandler( IdentityDbContext<ApplicationUser> databaseManager)
+    public CheckUserExistsHandler( IDatabaseManager databaseManager)
     {
         _databaseManager = databaseManager;
     }

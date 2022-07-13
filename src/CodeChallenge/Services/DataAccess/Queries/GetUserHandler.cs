@@ -1,4 +1,5 @@
 using CodeChallenge.Models.Identity;
+using CodeChallenge.Models.Interfaces;
 using CodeChallenge.Services.DataAccess.Queries.Base;
 using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,9 +8,9 @@ namespace CodeChallenge.Services.DataAccess.Queries;
 
 public class GetUserHandler :  IRequestHandler<GetUser, ApplicationUser>
 {
-    private readonly IdentityDbContext<ApplicationUser> _databaseManager;
+    private readonly IDatabaseManager _databaseManager;
 
-    public GetUserHandler(IdentityDbContext<ApplicationUser> databaseManager)
+    public GetUserHandler(IDatabaseManager databaseManager)
     {
         _databaseManager = databaseManager;
     }
