@@ -19,7 +19,7 @@ public class UpdateMazeMaxPathSolutionHandler: IRequestHandler<UpdateMazeMaxPath
         {
             var target = _databaseManager.Mazes.SingleOrDefault(mz => mz.Hash == request.Maze.Hash);
             if (target == null) return Unit.Value;
-            target.MinSolved = request.Maze.MinSolved;
+            target.MaxSolved = request.Maze.MaxSolved;
             target.LongestPath = request.Maze.ShortestPath;
             target.Image = request.Maze.Image;
             _databaseManager.SaveChanges();

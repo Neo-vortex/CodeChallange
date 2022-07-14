@@ -31,7 +31,6 @@ public class MazeSolverService : IMazeService
             {
                 return new Tuple<Maze, int>(maze,0);
             }
-
             var ExitPoit = new MazePoint();
             var exitCount = 0;
             var alreadyChecked = new ConcurrentBag<MazePoint>() {maze.Start};
@@ -80,18 +79,19 @@ public class MazeSolverService : IMazeService
             {
                 return maze;
             }
+            var MazeNodeEqualityComparer = new MazeNode.MazeNodeEqualityComparer();
             var Current= new MazeNode();
-            var openList = new List<MazeNode>{ new() {Parrent = null , Point = maze.Start , FScore = maze.Start.CalculateFScore(maze)}};
+            var openList = new List<MazeNode>{ new() {Parent = null , Point = maze.Start , FScore = maze.Start.CalculateFScore(maze)}};
             var closeList = new List<MazeNode>();
             while (openList.Any() && !closeList.Any(node => node.Point.Equals(maze.End)))
             { 
-             openList.Sort((node1, node2) => node1.FScore.CompareTo(node2));
+             openList.Sort((node1, node2) => node1.FScore.CompareTo(node2.FScore));
              Current = openList.First();
              closeList.Add(Current);
              openList.Remove(Current);
              var neighbours = maze.CalculateNeighbours(Current.Point);
-             openList.AddRange(neighbours.Select(point => new MazeNode{Parrent = Current , Point = point , FScore = point.CalculateFScore(maze)}));
-             openList = openList.Except(closeList, new MazeNode.MazeNodeEqualityComparer()).ToList();
+             openList.AddRange(neighbours.Select(point => new MazeNode{Parent = Current , Point = point , FScore = point.CalculateFScore(maze) }));
+             openList = openList.Except(closeList, MazeNodeEqualityComparer).ToList();
             }
             if (!closeList.Any(node => node.Point.Equals(maze.End))) return maze;
             var finalPath = new List<MazeNode>();
@@ -99,7 +99,7 @@ public class MazeSolverService : IMazeService
             while (currentParent != null)
             {
                 finalPath.Add(currentParent);
-                currentParent = currentParent.Parrent;
+                currentParent = currentParent.Parent;
             }
             finalPath.Reverse();
             maze.ShortestPath = finalPath.Select(node => node.Point).ToArray();
@@ -124,26 +124,26 @@ public class MazeSolverService : IMazeService
             {
                 return maze;
             }
+            var MazeNodeEqualityComparer = new MazeNode.MazeNodeEqualityComparer();
             var Current= new MazeNode();
-            var openList = new List<MazeNode>{ new() {Parrent = null , Point = maze.Start , FScore = maze.Start.CalculateFScore(maze)}};
+            var openList = new List<MazeNode>{ new() {Parent = null , Point = maze.Start , FScore = maze.Start.CalculateFScore(maze)}};
             var closeList = new List<MazeNode>();
             while (openList.Any() && !closeList.Any(node => node.Point.Equals(maze.End)))
             { 
-                openList.Sort((node1, node2) => node1.FScore.CompareTo(node2));
+                openList.Sort((node1, node2) => node1.FScore.CompareTo(node2.FScore));
                 Current = openList.Last();
                 closeList.Add(Current);
                 openList.Remove(Current);
                 var neighbours = maze.CalculateNeighbours(Current.Point);
-                openList.AddRange(neighbours.Select(point => new MazeNode{Parrent = Current , Point = point , FScore = point.CalculateFScore(maze)}));
-                openList = openList.Except(closeList, new MazeNode.MazeNodeEqualityComparer()).ToList();
+                openList.AddRange(neighbours.Select(point => new MazeNode{Parent = Current , Point = point , FScore = point.CalculateFScore(maze)  }));
+                openList = openList.Except(closeList, MazeNodeEqualityComparer).ToList();
             }
             if (!closeList.Any(node => node.Point.Equals(maze.End))) return maze;
             var finalPath = new List<MazeNode>();
-            var currentParent = Current;
-            while (currentParent != null)
+            while (Current != null)
             {
-                finalPath.Add(currentParent);
-                currentParent = currentParent.Parrent;
+                finalPath.Add(Current);
+                Current = Current.Parent;
             }
             finalPath.Reverse();
             maze.LongestPath = finalPath.Select(node => node.Point).ToArray();

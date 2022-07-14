@@ -12,6 +12,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace CodeChallenge.Controllers
 {
     [ApiController]
@@ -61,14 +62,35 @@ namespace CodeChallenge.Controllers
             switch (solution.Type)
             {
                 case SolutionType.MIN: 
-                     var result = await _mazeService.SolveMinPath(resultMaze);
-                     await _mediator.Send(new UpdateMazeMinPathSolution(result));
-                     return (new SolutionResponse()
+                     var minResult = await _mazeService.SolveMinPath(resultMaze);
+                     await _mediator.Send(new UpdateMazeMinPathSolution(minResult));
+                     if (minResult.NoSolutionDefinitely)
                      {
-                         path = result.ShortestPath!.Select(path => path.ToPlainText()).ToArray()
-                     });
+                         return BadRequest(new Response()
+                         {
+                             Status = ResponseStatus.Error, 
+                             Message = "No solution was found"
+                         });
+                     }
+                     return new SolutionResponse()
+                     {
+                         path = minResult.ShortestPath!.Select(path => path.ToPlainText()).ToArray()
+                     };
                 case SolutionType.MAX:
-                    break;
+                    var maxResult = await _mazeService.SolveMaxPath(resultMaze);
+                    await _mediator.Send(new UpdateMazeMaxPathSolution(maxResult));
+                    if (maxResult.NoSolutionDefinitely)
+                    {
+                        return BadRequest(new Response()
+                        {
+                            Status = ResponseStatus.Error, 
+                            Message = "No solution was found"
+                        });
+                    }
+                    return new SolutionResponse()
+                    {
+                        path = maxResult.LongestPath!.Select(path => path.ToPlainText()).ToArray()
+                    };
             }
             
             return Ok();
@@ -94,7 +116,7 @@ namespace CodeChallenge.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("/[controller]/{mazeId}/image/first_stage")]
+        [Route("/[controller]/{mazeId}/image/")]
         public async Task<ActionResult<Response>> GetMazeImage(string mazeId)
         {
             var resultMaze = await _mediator.Send(new GetMaze(mazeId, User));

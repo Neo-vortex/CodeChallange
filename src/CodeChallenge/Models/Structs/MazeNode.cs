@@ -22,6 +22,6 @@ public class MazeNode : MazePointHeuristic
     public static IEqualityComparer<MazeNode> CurrentComparer { get; } = new MazeNodeEqualityComparer();
 
     
-    public  MazeNode Parrent { get; set; }
+    public  MazeNode Parent { get; set; }
     
 }
